@@ -1,0 +1,15 @@
+version: "3"
+services:
+  tripdb:
+    image: "postgres:10.3"
+    ports:
+      - "5432:5432"
+    # environment:
+      # - POSTGRES_DB=nyc_trips
+      # - POSTGRES_PASSWORD=def456
+      # Postgres recommends setting the data directory
+      # to a subdirectory of the default directory when
+      # the data is in an external volume
+      ##- PG_DATA="/var/lib/postgresql/data/db_data"
+    volumes:
+      - "~/.docker-volumes/nyc_trips/tripdb:/var/lib/postgresql/data"
