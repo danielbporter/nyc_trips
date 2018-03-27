@@ -6,40 +6,23 @@
  * user guide available at https://docs.gradle.org/4.6/userguide/tutorial_java_projects.html
  */
 
+buildscript {
+    dependencies {
+        classpath 'org.postgresql:postgresql:42.2.2'
+    }
+}
+
 plugins {
-    // Apply the java plugin to add support for Java
-//    id 'java'
-
-    // Apply the application plugin to add support for building an application
-//    id 'application'
-
     id 'org.springframework.boot' version '2.0.0.RELEASE'
-//    id 'io.spring.dependency-management'
+    id "org.flywaydb.flyway" version "5.0.7"
 }
 
 apply plugin: 'java'
 apply plugin: 'io.spring.dependency-management'
 
-//buildscript {
-//    ext {
-//        springBootVersion = '2.0.0.RELEASE'
-//    }
-//    repositories {
-//        mavenCentral()
-//    }
-//}
-
-//apply plugin: 'java'
-//apply plugin: 'org.springframework.boot'
-//apply plugin: 'io.spring.dependency-management'
-
-
-// Define the main class for the application
-//mainClassName = 'App'
-
 dependencies {
-    // This dependency is found on compile classpath of this component and consumers.
-//    compile 'com.google.guava:guava:23.0'
+
+    runtime('org.postgresql:postgresql:42.2.2')
 
     compile('org.springframework.boot:spring-boot-starter-actuator')
     compile('org.springframework.boot:spring-boot-starter-batch')
@@ -47,13 +30,15 @@ dependencies {
     testCompile('org.springframework.boot:spring-boot-starter-test')
     testCompile('org.springframework.batch:spring-batch-test')
 
-    // Use JUnit test framework
-//    testCompile 'junit:junit:4.12'
 }
 
-// In this section you declare where to find the dependencies of your project
 repositories {
     // Use jcenter for resolving your dependencies.
     // You can declare any Maven/Ivy/file repository here.
     jcenter()
+}
+
+flyway {
+     url = 'jdbc:postgresql://localhost:5432/postgres'
+     user = 'postgres'
 }

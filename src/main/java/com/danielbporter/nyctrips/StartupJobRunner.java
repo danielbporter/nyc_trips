@@ -1,0 +1,39 @@
+package com.danielbporter.nyctrips;
+
+import org.springframework.batch.core.Job;
+import org.springframework.batch.core.JobExecution;
+import org.springframework.batch.core.JobParameters;
+import org.springframework.batch.core.JobParametersBuilder;
+import org.springframework.batch.core.JobParametersInvalidException;
+import org.springframework.batch.core.launch.JobLauncher;
+import org.springframework.batch.core.repository.JobExecutionAlreadyRunningException;
+import org.springframework.batch.core.repository.JobInstanceAlreadyCompleteException;
+import org.springframework.batch.core.repository.JobRestartException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.event.ContextRefreshedEvent;
+import org.springframework.context.event.EventListener;
+import org.springframework.stereotype.Component;
+
+@Component
+public class StartupJobRunner {
+
+    @Autowired
+    private JobLauncher jobLauncher;
+
+    @Autowired
+    private Job yellowTripFeeder;
+
+    @EventListener(ContextRefreshedEvent.class)
+    public void run() throws JobParametersInvalidException, JobExecutionAlreadyRunningException, JobRestartException, JobInstanceAlreadyCompleteException {
+        System.out.println("running job");
+        JobExecution exec = jobLauncher.run(yellowTripFeeder, jobParams());
+        System.out.println("exec: " + exec);
+    }
+
+    private JobParameters jobParams() {
+        return new JobParametersBuilder()
+                .addString("fileName", "tripdata/yellow_tripdata_2017-01.csv")
+                .toJobParameters();
+    }
+
+}
